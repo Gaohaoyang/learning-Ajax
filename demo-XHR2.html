@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Demo</title>
+		<style type="text/css">
+			body,input,button,select,h1{
+				font-size: 18px;
+				line-height: 1.8;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>员工查询</h1>
+		<label for="">请输入员工编号：</label>
+		<input type="text" id="keyword"><br>
+		<button id="search">查询</button>
+		<p id="searchResult"></p>
+		<h1>员工创建</h1>
+		<label for="">请输入员工姓名：</label>
+		<input type="text" id="staffName"><br>
+		<label for="">请输入员工编号：</label>
+		<input type="text" id="staffNumber"><br>
+		<label for="">请选择员工性别：</label>
+		<select name="" id="staffSex">
+			<option value="男">男</option>
+			<option value="女">女</option>
+		</select><br>
+		<label for="">请输入员工职位</label>
+		<input type="text" id="staffJob"><br>
+		<button id="save">保存</button>
+		<p id="createResult"></p>
+		
+		<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$('#search').click(function(){
+					$.ajax({
+						url: 'http://127.0.0.1:8080/learning-Ajax/demo-XHR2-service.php?number='+$('#keyword').val(),
+						type: 'GET',
+						dataType: 'json',
+					})
+					.done(function(data) {
+						console.log("success");
+						if(data.success){
+							$('#searchResult').html(data.msg);
+						}else{
+							$('#searchResult').html("出现错误："+data.msg);
+						}
+					})
+					.fail(function(jqXHR) {
+						console.log("error");
+						alert("发生错误："+jqXHR.status);
+					})
+					.always(function() {
+						console.log("complete");
+					});
+				});
+
+				$('#save').click(function() {
+					$.ajax({
+						url: 'http://127.0.0.1:8080/learning-Ajax/demo-XHR2-service.php',
+						type: 'POST',
+						dataType: 'json',
+						data: {
+							name: $('#staffName').val(),
+							number:$('#staffNumber').val(),
+							sex:$('#staffSex').val(),
+							job:$('#staffJob').val(),
+						},
+					}).done(function(data) {
+						console.log("success");
+						if (data.success) {
+							$('#createResult').html(data.msg);
+						} else{
+							$('#createResult').html("出现错误："+data.msg);
+						};
+					})
+					.fail(function(jqXHR) {
+						console.log("error");
+						alert("发生错误："+jqXHR.status);
+					})
+					.always(function() {
+						console.log("complete");
+					});
+				});
+			});
+		</script>
+	</body>
+</html>
